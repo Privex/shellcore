@@ -69,18 +69,18 @@ Below is a short snippet that you can place at the start of your script or main 
     - If not, attempt to automatically install ShellCore if we failed to find an installation. The installation script is fully
       unattended - errors are sent to **stderr**.
     - If the installation fails, then output an error message to **stderr** and exit the script with a non-zero return code.
- - Attempt to load ShellCore from `~/.pv-shcore` (local) first, then fallback to `/usr/local/share/pv-shcore` (global)
+ - Attempt to load ShellCore from `~/.local/lib/pv-shcore` (local) first, then fallback to `/usr/local/share/pv-shcore` (global)
 
 ```bash
 # Error handling function for ShellCore
 _sc_fail() { >&2 echo "Failed to load or install Privex ShellCore..." && exit 1; }
 # If `load.sh` isn't found in the user install / global install, then download and run the auto-installer
 # from Privex's CDN.
-[[ -f "${HOME}/.pv-shcore/load.sh" ]] || [[ -f "/usr/local/share/pv-shcore/load.sh" ]] || \
+[[ -f "${HOME}/.local/lib/.pv-shcore/load.sh" ]] || [[ -f "/usr/local/share/pv-shcore/load.sh" ]] || \
     { curl -fsS https://cdn.privex.io/github/shell-core/install.sh | bash >/dev/null; } || _sc_fail
 
 # Attempt to load the local install of ShellCore first, then fallback to global install if it's not found.
-[[ -d "${HOME}/.pv-shcore" ]] && source "${HOME}/.pv-shcore/load.sh" || \
+[[ -d "${HOME}/.local/lib/.pv-shcore" ]] && source "${HOME}/.local/lib/.pv-shcore/load.sh" || \
     source "/usr/local/share/pv-shcore/load.sh" || _sc_fail
 
 # Optionally, you may wish to run `autoupdate_shellcore` after loading it. This will quietly update ShellCore to
