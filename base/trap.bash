@@ -433,6 +433,9 @@ trap_err_handler() {
     _TRAP_LAST_LINE="$1"
     _TRAP_LAST_CALLER="$2"
     _TRAP_ERR_CALL=1
+    if [ ! -z ${SG_PRETRAPEXIT+x} ]; then
+        eval $SG_PRETRAPEXIT
+    fi
     exit $_ret
 }
 
@@ -482,13 +485,13 @@ function trap_traceback
     j=$(( i - 1 ))
     local function="${FUNCNAME[$i]}"
     local file="${BASH_SOURCE[$i]}"
-    local line="${BASH_LINENO[$j]}"
-    local cmd=''
+    local line=''
     if [ $i -eq $start ]; then
-        cmd="$BASH_COMMAND"
+        line="$_TRAP_LAST_LINE"
     else
-        cmd="$(awk "NR==$line" $file | sed 's/^ *//g')"
+        line="${BASH_LINENO[$j]}"
     fi
+    local cmd="$(awk "NR==$line" $file | sed 's/^ *//g')"
     echo "     ${cmd} ==> ${function}() in ${file}:${line}"
   done
 }
