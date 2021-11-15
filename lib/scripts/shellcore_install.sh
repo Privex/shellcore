@@ -6,7 +6,7 @@
 #                                                           #
 # Released under the GNU GPLv3                              #
 #                                                           #
-# Official Repo: github.com/Privex/shell-core               #
+# Official Repo: github.com/guillaumeboehm/shell-core       #
 #                                                           #
 #############################################################
 
@@ -25,8 +25,8 @@ export BOLD RED GREEN YELLOW BLUE MAGENTA CYAN WHITE RESET
 len() { wc -c <<< "${@:1}"; }
 
 cleanup() {
-    if ! [ -z ${clonedir+x} ] && [[ $(len "$clonedir") -gt 5 ]]; then 
-        echo "Removing temporary clone folder '$clonedir'..." && rm -rf "$clonedir"; 
+    if ! [ -z ${clonedir+x} ] && [[ $(len "$clonedir") -gt 5 ]]; then
+        echo "Removing temporary clone folder '$clonedir'..." && rm -rf "$clonedir";
     fi
 }
 
@@ -40,7 +40,7 @@ sudo() {
     fi
     /usr/bin/env sudo "${@:1}"
   else
-    /usr/bin/env "${@:1}" # The user is already root, so just drop the 'sudo' and run it raw.    
+    /usr/bin/env "${@:1}" # The user is already root, so just drop the 'sudo' and run it raw.
   fi
 }
 
@@ -81,13 +81,13 @@ if ! has_binary git; then
     fi
 fi
 
-echo "${GREEN} -> Cloning Privex/shell-core into '$clonedir'${RESET}"
-git clone -q https://github.com/Privex/shell-core.git "$clonedir"
+echo "${GREEN} -> Cloning guillaumeboehm/shell-core into '$clonedir'${RESET}"
+git clone -q https://github.com/guillaumeboehm/shell-core.git "$clonedir"
 echo "${GREEN} -> Using 'run.sh install' to install/update Privex ShellCore${RESET}"
 bash "${clonedir}/run.sh" install
 
-if [[ -d "${HOME}/.pv-shcore" ]]; then
-    echo "source ${HOME}/.pv-shcore/load.sh" > /tmp/pv-shellcore
+if [[ -d "${HOME}/.local/share/pv-shcore" ]]; then
+    echo "source ${HOME}/.local/share/pv-shcore/load.sh" > /tmp/pv-shellcore
 elif [[ -d "/usr/local/share/pv-shcore" ]]; then
     echo "source /usr/local/share/pv-shcore/load.sh" > /tmp/pv-shellcore
 else
