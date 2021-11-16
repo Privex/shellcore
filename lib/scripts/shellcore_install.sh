@@ -6,7 +6,7 @@
 #                                                           #
 # Released under the GNU GPLv3                              #
 #                                                           #
-# Official Repo: github.com/guillaumeboehm/shell-core       #
+# Official Repo: github.com/Privex/shell-core       #
 #                                                           #
 #############################################################
 
