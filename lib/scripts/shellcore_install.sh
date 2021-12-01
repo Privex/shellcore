@@ -81,8 +81,8 @@ if ! has_binary git; then
     fi
 fi
 
-echo "${GREEN} -> Cloning guillaumeboehm/shell-core into '$clonedir'${RESET}"
-git clone -q https://github.com/guillaumeboehm/shell-core.git "$clonedir"
+echo "${GREEN} -> Cloning Privex/shell-core into '$clonedir'${RESET}"
+git clone -q https://github.com/Privex/shell-core.git "$clonedir"
 echo "${GREEN} -> Using 'run.sh install' to install/update Privex ShellCore${RESET}"
 bash "${clonedir}/run.sh" install
 
