@@ -29,7 +29,7 @@ DIR="$( cd "$( dirname "${_SDIR}" )" && pwd )"
 : ${SG_DEBUG=0} # If set to 1, will enable debugging output to stderr
 : ${DEBUGLOG="${SG_DIR}/logs/debug.log"}
 
-: ${SG_LOCALDIR="${HOME}/.pv-shcore"}            # Folder to install Privex Shell Core for local installs
+: ${SG_LOCALDIR="${HOME}/.local/share/pv-shcore"}            # Folder to install Privex Shell Core for local installs
 : ${SG_GLOBALDIR="/usr/local/share/pv-shcore"}   # Folder to install Privex Shell Core for global installs
 # How many seconds must've passed since the last update to trigger an auto-update
 : ${SG_UPDATE_SECS=604800}
@@ -49,7 +49,7 @@ last_update_shellcore
 update_shellcore() { bash "${SG_DIR}/run.sh" update; }
 autoupdate_shellcore() {
     last_update_shellcore
-    local _unix_now=$(date +'%s') 
+    local _unix_now=$(date +'%s')
     local unix_now=$(($_unix_now)) next_update=$((SG_LAST_UPDATE+SG_UPDATE_SECS))
     local last_rel=$((unix_now-SG_LAST_UPDATE))
     if (($next_update<$unix_now)); then

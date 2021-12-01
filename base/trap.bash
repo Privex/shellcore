@@ -330,12 +330,12 @@ function exit_handler ()
         local row="${BASH_REMATCH[1]}"
         lineno="${BASH_REMATCH[2]}"
 
-        msgerr white "FILE:\t\t${error_file}"
-        msgerr white "${row^^}:\t\t${lineno}\n"
+        msgerr "FILE:\t\t${error_file}"
+        msgerr "${row^^}:\t\t${lineno}\n"
 
-        msgerr white "ERROR CODE:\t${error_code}"             
+        msgerr "ERROR CODE:\t${error_code}"             
         msgerr yellow "ERROR MESSAGE:\n"
-        msgerr white "\t$error_message\n"
+        msgerr "\t$error_message\n"
 
     else
         regex="^${error_file}\$|^${error_file}\s+|\s+${error_file}\s+|\s+${error_file}\$"
@@ -346,12 +346,12 @@ function exit_handler ()
             # (could not reproduce this case so far)
             # ------------------------------------------------------
         
-            msgerr white "FILE:\t\t$error_file"
-            msgerr white "ROW:\t\tunknown\n"
+            msgerr "FILE:\t\t$error_file"
+            msgerr "ROW:\t\tunknown\n"
 
-            msgerr white "ERROR CODE:\t${error_code}"
+            msgerr "ERROR CODE:\t${error_code}"
             msgerr yellow "ERROR MESSAGE:\n"
-            msgerr white "\t${stderr}\n"
+            msgerr "\t${stderr}\n"
         else
             _trap_debug "_backtrace did not match regex..."
             # Neither the error line nor the error file was found on the log
@@ -389,21 +389,21 @@ function exit_handler ()
                 error_file="$( echo "$error_file" | sed -E 's/^[ \t]*//' | sed -E 's/[ \t]*$//' )"
             fi
 
-            msgerr white "FILE:\t\t$error_file"
+            msgerr "FILE:\t\t$error_file"
             if (($_TRAP_ERR_CALL==1)); then
-                msgerr white "ROW:\t\t$_TRAP_LAST_LINE\n"
-                msgerr white "Line which triggered the error:\n\n\t$_TRAP_LAST_CALLER\n\n"
+                msgerr "ROW:\t\t$_TRAP_LAST_LINE\n"
+                msgerr "Line which triggered the error:\n\n\t$_TRAP_LAST_CALLER\n\n"
             else
-                msgerr white "ROW:\t\tunknown\n"
+                msgerr "ROW:\t\tunknown\n"
             fi
 
-            msgerr white "ERROR CODE:\t${error_code}"
+            msgerr "ERROR CODE:\t${error_code}"
             if [ -n "${stderr}" ]; then
                 msgerr yellow "ERROR MESSAGE:\n"
-                msgerr white "\t${stderr}\n"
+                msgerr "\t${stderr}\n"
             else
                 msgerr yellow "ERROR MESSAGE:\n"
-                msgerr white "\t${error_message}\n"
+                msgerr "\t${error_message}\n"
             fi
         fi
     fi
@@ -433,6 +433,9 @@ trap_err_handler() {
     _TRAP_LAST_LINE="$1"
     _TRAP_LAST_CALLER="$2"
     _TRAP_ERR_CALL=1
+    if [ ! -z ${SG_PRETRAPEXIT+x} ]; then
+        eval $SG_PRETRAPEXIT
+    fi
     exit $_ret
 }
 
@@ -482,8 +485,14 @@ function trap_traceback
     j=$(( i - 1 ))
     local function="${FUNCNAME[$i]}"
     local file="${BASH_SOURCE[$i]}"
-    local line="${BASH_LINENO[$j]}"
-    echo "     ${function}() in ${file}:${line}"
+    local line=''
+    if [ $i -eq $start ]; then
+        line="$_TRAP_LAST_LINE"
+    else
+        line="${BASH_LINENO[$j]}"
+    fi
+    local cmd="$(awk "NR==$line" $file | sed 's/^ *//g')"
+    echo "     ${cmd} ==> ${function}() in ${file}:${line}"
   done
 }
 
